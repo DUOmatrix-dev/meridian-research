@@ -1,0 +1,6 @@
+{
+  "name": "Meridian Research",
+  "description": "Market intelligence and emerging trend research workbench for competitive mapping, TAM/SAM/SOM sizing, technology scouting, and strategic briefs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

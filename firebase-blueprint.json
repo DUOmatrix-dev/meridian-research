@@ -1,0 +1,218 @@
+{
+  "entities": {
+    "ResearchBrief": {
+      "title": "ResearchBrief",
+      "description": "A market intelligence and trend research dossier persisted by a user.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the brief owner.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "topic": {
+          "type": "string",
+          "description": "Primary market trend or product research subject.",
+          "minLength": 2,
+          "maxLength": 240
+        },
+        "industry": {
+          "type": "string",
+          "description": "Industry sector or vertical.",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "briefType": {
+          "type": "string",
+          "description": "Delivery format of the intelligence brief.",
+          "enum": [
+            "trend-brief",
+            "market-map",
+            "opportunity-assessment",
+            "tech-scouting"
+          ]
+        },
+        "signalStrength": {
+          "type": "string",
+          "description": "Validated signal strength rating.",
+          "enum": ["Weak", "Moderate", "Strong"]
+        },
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Current position on the trend lifecycle curve.",
+          "enum": ["Emergence", "Growth", "Maturity", "Decline"]
+        },
+        "leadTimeMonths": {
+          "type": "string",
+          "description": "Estimated lead time before mainstream adoption.",
+          "minLength": 1,
+          "maxLength": 60
+        },
+        "confidencePct": {
+          "type": "number",
+          "description": "Forecast confidence percentage between 0 and 100."
+        },
+        "executiveSummary": {
+          "type": "string",
+          "description": "Executive thesis and strategic summary.",
+          "minLength": 10,
+          "maxLength": 5000
+        },
+        "drivers": {
+          "type": "array",
+          "description": "Top structural drivers accelerating the trend."
+        },
+        "barriers": {
+          "type": "array",
+          "description": "Primary adoption or regulatory barriers."
+        },
+        "metrics": {
+          "type": "object",
+          "description": "Market sizing and forecast metrics (TAM, SAM, SOM, CAGR, adoption percentages)."
+        },
+        "sections": {
+          "type": "object",
+          "description": "Structured research sections (competitors, segments, recommendations, techScouting, adoptionCurve)."
+        },
+        "sources": {
+          "type": "array",
+          "description": "Verified grounding source citations with title and URI."
+        },
+        "history": {
+          "type": "array",
+          "description": "Chronological lifecycle phase snapshots and transition notes for the brief."
+        },
+        "isArchived": {
+          "type": "boolean",
+          "description": "Whether the brief is archived by the analyst."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last update timestamp."
+        }
+      },
+      "required": [
+        "ownerId",
+        "topic",
+        "industry",
+        "briefType",
+        "signalStrength",
+        "lifecyclePhase",
+        "leadTimeMonths",
+        "confidencePct",
+        "executiveSummary",
+        "drivers",
+        "barriers",
+        "metrics",
+        "sections",
+        "sources",
+        "isArchived",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "WatchlistSignal": {
+      "title": "WatchlistSignal",
+      "description": "A continuously monitored emerging trend signal in the user's watchlist.",
+      "type": "object",
+      "properties": {
+        "ownerId": {
+          "type": "string",
+          "description": "Firebase Auth UID of the signal owner.",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "topic": {
+          "type": "string",
+          "description": "Monitored trend keyword or market signal.",
+          "minLength": 2,
+          "maxLength": 240
+        },
+        "industry": {
+          "type": "string",
+          "description": "Target industry vertical.",
+          "minLength": 2,
+          "maxLength": 120
+        },
+        "signalStrength": {
+          "type": "string",
+          "description": "Latest assessed signal strength.",
+          "enum": ["Weak", "Moderate", "Strong"]
+        },
+        "lifecyclePhase": {
+          "type": "string",
+          "description": "Latest assessed lifecycle phase.",
+          "enum": ["Emergence", "Growth", "Maturity", "Decline"]
+        },
+        "cadence": {
+          "type": "string",
+          "description": "Monitoring frequency.",
+          "enum": ["Weekly", "Monthly", "Quarterly"]
+        },
+        "alertThreshold": {
+          "type": "string",
+          "description": "Trigger criteria for executive escalation.",
+          "minLength": 2,
+          "maxLength": 240
+        },
+        "latestDeltaNote": {
+          "type": "string",
+          "description": "Latest intelligence delta observed during refresh.",
+          "minLength": 1,
+          "maxLength": 1500
+        },
+        "linkedBriefId": {
+          "type": "string",
+          "description": "Optional ID of the associated full research brief.",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server creation timestamp."
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server last update timestamp."
+        }
+      },
+      "required": [
+        "ownerId",
+        "topic",
+        "industry",
+        "signalStrength",
+        "lifecyclePhase",
+        "cadence",
+        "alertThreshold",
+        "latestDeltaNote",
+        "linkedBriefId",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}/briefs/{briefId}": {
+      "schema": {
+        "$ref": "#/entities/ResearchBrief"
+      },
+      "description": "Private research dossiers owned by a specific authenticated user."
+    },
+    "/users/{userId}/watchlist/{signalId}": {
+      "schema": {
+        "$ref": "#/entities/WatchlistSignal"
+      },
+      "description": "Continuous monitoring watchlist signals owned by a specific authenticated user."
+    }
+  }
+}
