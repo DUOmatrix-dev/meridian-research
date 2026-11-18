@@ -21,7 +21,6 @@ import {
   serverTimestamp,
   Timestamp,
 } from 'firebase/firestore';
-import firebaseConfig from '../../firebase-applet-config.json';
 import type {
   LifecycleHistoryEntry,
   LifecyclePhase,
@@ -29,6 +28,36 @@ import type {
   SignalStrength,
   WatchlistSignal,
 } from '../types/research';
+
+interface FirebaseAppletConfig {
+  projectId?: string;
+  appId?: string;
+  apiKey?: string;
+  authDomain?: string;
+  firestoreDatabaseId?: string;
+  storageBucket?: string;
+  messagingSenderId?: string;
+}
+
+// Optional load of git-ignored local config so fresh clones without the file still build cleanly
+const localConfigModules = import.meta.glob<{ default?: FirebaseAppletConfig } & FirebaseAppletConfig>(
+  '../../firebase-applet-config.json',
+  { eager: true },
+);
+const localConfigEntry = Object.values(localConfigModules)[0];
+const fileConfig: FirebaseAppletConfig = localConfigEntry?.default ?? localConfigEntry ?? {};
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_FIREBASE_API_KEY || fileConfig.apiKey || '',
+  authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || fileConfig.authDomain || '',
+  projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || fileConfig.projectId || '',
+  storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || fileConfig.storageBucket || '',
+  messagingSenderId:
+    import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || fileConfig.messagingSenderId || '',
+  appId: import.meta.env.VITE_FIREBASE_APP_ID || fileConfig.appId || '',
+  firestoreDatabaseId:
+    import.meta.env.VITE_FIREBASE_DATABASE_ID || fileConfig.firestoreDatabaseId || '(default)',
+};
 
 const app = initializeApp(firebaseConfig);
 export const db = getFirestore(app, firebaseConfig.firestoreDatabaseId);
